@@ -12,6 +12,11 @@ public class Usuario {
 	//}
 	//william
 	
+	@Override
+	public String toString() {
+		return "Usuario [id=" + id + ", nome=" + nome + "]";
+	}
+	
 	public int getId() {
 		return id;
 	}
