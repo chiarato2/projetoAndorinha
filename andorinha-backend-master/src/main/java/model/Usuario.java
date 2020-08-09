@@ -5,12 +5,10 @@ public class Usuario {
 	private int id;
 	private String nome;
 	
-	//william
-	//public Usuario(int id, String nome) {
-		//this.id = id;
-		//this.nome = nome;
-	//}
-	//william
+	@Override
+	public String toString() {
+		return "Usuario [id=" + id + ", nome=" + nome + "]";
+	}
 	
 	public int getId() {
 		return id;
