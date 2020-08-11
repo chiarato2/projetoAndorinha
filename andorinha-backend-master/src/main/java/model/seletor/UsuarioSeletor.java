@@ -9,8 +9,7 @@ public class UsuarioSeletor {
 	private int pagina;
 
 	public boolean possuiFiltro() {
-		return this.id != null || 
-				(this.nome != null && !this.nome.trim().isEmpty() );
+		return this.id != null || (this.nome != null && !this.nome.trim().isEmpty() );
 	}
 
 	public boolean possuiPaginacao() {

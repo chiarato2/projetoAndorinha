@@ -7,9 +7,6 @@ import javax.ejb.Stateless;
 import javax.persistence.Query;
 
 import model.Comentario;
-import model.Tweet;
-import model.exceptions.ErroAoConectarNaBaseException;
-import model.exceptions.ErroAoConsultarBaseException;
 import model.seletor.ComentarioSeletor;
 
 @Stateless
@@ -70,24 +67,61 @@ public class ComentarioRepository extends AbstractCrudRepository {
 		return (Long)query.getSingleResult();
 	}
 	
-	private void criarFiltro(StringBuilder sql, ComentarioSeletor seletor) {
+	private void criarFiltro(StringBuilder jpql, ComentarioSeletor seletor) {
 		
 		if(seletor.possuiFiltro()) {
-			sql.append("WHERE ");
+			jpql.append("WHERE ");
 			boolean primeiro = true;
 			if(seletor.getIdTweet() != null && seletor.getIdUsuario() != null) {
-				sql.append("c.id = :id");
+				
+				jpql.append("c.id = :id");
+				primeiro = false;
 			}
 			
 			if(seletor.getConteudo() != null && !seletor.getConteudo().trim().isEmpty()) {
 				if(!primeiro) {
-					sql.append("AND ");
+					jpql.append("AND ");
 	
+				}else {
+					
+					primeiro = true;
 				}
-				sql.append("c.conteudo LIKE :conteudo");
-	
+				
+				jpql.append("c.conteudo LIKE :conteudo");
 			}
 			
+			if (seletor.getData() != null) {
+				if (!primeiro) {
+					
+					jpql.append("AND ");
+				}else {
+					
+					primeiro = true;
+				}
+				
+				jpql.append("c.data_postagem = :data_postagem ");
+			}
+			
+			if (seletor.getIdUsuario() != null) {
+				if (!primeiro) {
+					
+					jpql.append("AND ");
+				}else {
+					
+					primeiro = true;
+				}
+				
+				jpql.append("c.id_usuario = :id_usuario ");
+			}
+			
+			if (seletor.getIdTweet() != null) {
+				if (!primeiro) {
+					
+					jpql.append("AND ");
+				}
+				
+				jpql.append("c.id_tweet = :id_tweet ");
+			}
 		}
 		
 	}
@@ -102,6 +136,18 @@ public class ComentarioRepository extends AbstractCrudRepository {
 
 			if (seletor.getConteudo() != null && !seletor.getConteudo().trim().isEmpty() ) {
 				query.setParameter("conteudo", String.format("%%%s%%", seletor.getConteudo()) );
+			}
+			
+			if (seletor.getData() != null) {
+				query.setParameter("data_postagem", seletor.getData().getTimeInMillis());
+			}
+			
+			if (seletor.getIdUsuario() != null) {
+				query.setParameter("id_usuario", seletor.getIdUsuario());
+			}
+			
+			if (seletor.getIdTweet() != null) {
+				query.setParameter("id_tweet", seletor.getIdTweet());
 			}
 		}
 	}

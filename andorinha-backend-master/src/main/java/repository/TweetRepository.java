@@ -59,7 +59,7 @@ public class TweetRepository extends AbstractCrudRepository {
 	public Long contar(TweetSeletor seletor) throws ErroAoConsultarBaseException, ErroAoConectarNaBaseException{
 		
 		StringBuilder jpql = new StringBuilder();
-		jpql.append("SELECT COUNT(t) FROM Tweet t");
+		jpql.append("SELECT COUNT(t) FROM Tweet t ");
 		
 		this.criarFiltro(jpql, seletor);
 		
@@ -79,15 +79,40 @@ public class TweetRepository extends AbstractCrudRepository {
 			if ( seletor.getIdUsuario() != null ) {
 				
 				jpql.append("t.id = :id ");
+				primeiro = false;
 			}
 			
 			if(seletor.getConteudo() != null && !seletor.getConteudo().trim().isEmpty()) {
 				if(!primeiro) {
 					
 					jpql.append("AND ");
+				}else {
+					primeiro = true;
 				}
 				
-				jpql.append("t.conteudo LIKE :conteudo");
+				jpql.append("t.conteudo LIKE :conteudo ");
+			}
+			
+			if (seletor.getData() != null) {
+				if (!primeiro) {
+					
+					jpql.append("AND ");
+				}else {
+					primeiro = true;
+				}
+				
+				jpql.append("t.data_postagem = :data_postagem ");
+			}
+			
+			if (seletor.getIdUsuario() != null) {
+				if (!primeiro) {
+					
+					jpql.append("AND ");
+				}else {
+					primeiro = true;
+				}
+				
+				jpql.append("t.id_usuario = :id_usuario ");
 			}
 		}	
 	}
@@ -101,6 +126,14 @@ public class TweetRepository extends AbstractCrudRepository {
 
 			if (seletor.getConteudo() != null && !seletor.getConteudo().trim().isEmpty() ) {
 				query.setParameter("conteudo", String.format("%%%s%%", seletor.getConteudo()) );
+			}
+			
+			if (seletor.getData() != null) {
+				query.setParameter("data_postagem", seletor.getData().getTimeInMillis());
+			}
+			
+			if (seletor.getIdUsuario() != null) {
+				query.setParameter("id_usuario", seletor.getIdUsuario());
 			}
 		}
 	}

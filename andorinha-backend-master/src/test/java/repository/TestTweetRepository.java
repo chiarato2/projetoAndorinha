@@ -1,6 +1,7 @@
 package repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Calendar;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 import javax.ejb.EJB;
 
 import org.dbunit.operation.DatabaseOperation;
+import org.hibernate.QueryException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +19,6 @@ import model.Usuario;
 import model.exceptions.ErroAoConectarNaBaseException;
 import model.exceptions.ErroAoConsultarBaseException;
 import model.seletor.TweetSeletor;
-import model.seletor.UsuarioSeletor;
 import runner.AndorinhaTestRunner;
 import runner.DatabaseHelper;
 
@@ -117,16 +118,19 @@ public class TestTweetRepository {
 	public void testa_pesquisar_tweets_por_id_usuario() throws ErroAoConectarNaBaseException, ErroAoConsultarBaseException{
 		TweetSeletor seletor = new TweetSeletor();
 		
-		seletor.setIdUsuario(1);
+		seletor.setIdUsuario(ID_USUARIO_CONSULTA);
 		List<Tweet> tweets = this.tweetRepository.pesquisar(seletor);
-
+		//assertThatThrownBy(() -> { this.tweetRepository.pesquisar(seletor); })
+		//.hasCauseInstanceOf(QueryException.class);
+		
 		assertThat(tweets).isNotNull()
 							.isNotEmpty()
 							.hasSize(3)
 							.extracting("conteudo")
-							.containsExactlyInAnyOrder("Minha postagem de teste", 
+							.containsExactlyInAnyOrder("Minha postagem de teste",
 													   "Minha postagem de teste 2", 
 													   "Minha postagem de teste 3");
+		
 	}
 	
 	
@@ -134,13 +138,6 @@ public class TestTweetRepository {
 	public void testa_contar_tweets_por_conteudo() throws ErroAoConectarNaBaseException, ErroAoConsultarBaseException{
 		
 		TweetSeletor seletor = new TweetSeletor();
-		
-		/*
-		Long total = this.tweetRepository.contar(seletor);
-
-		assertThat( total ).isNotNull()
-							.isEqualTo(3L);
-		*/
 		
 		seletor.setConteudo("Minha postagem de teste");
 		Long total = this.tweetRepository.contar(seletor);

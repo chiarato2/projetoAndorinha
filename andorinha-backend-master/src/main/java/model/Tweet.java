@@ -3,7 +3,6 @@ package model;
 import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,7 +30,7 @@ public class Tweet {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar data;
 	
-	@ManyToOne//(mappedBy = "tweet", fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name = "id_usuario", referencedColumnName = "id")
 	private Usuario usuario;
 	

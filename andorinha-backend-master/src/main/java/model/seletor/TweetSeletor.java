@@ -9,8 +9,15 @@ public class TweetSeletor {
 	private Calendar data;
 	private Integer idUsuario;
 	
+	private Integer limite;
+	private Integer pagina;
+	
 	public boolean possuiFiltro() {
-		return this.id != null || (this.conteudo != null && !this.conteudo.trim().isEmpty() );
+		return this.id != null || (this.conteudo != null && !this.conteudo.trim().isEmpty() ) || this.data != null  || this.idUsuario != null ;
+	}
+	
+	public boolean possuiPaginacao() {
+		return this.pagina > 0 && this.limite > 0;
 	}
 	
 	public Integer getId() {

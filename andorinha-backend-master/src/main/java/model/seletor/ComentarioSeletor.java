@@ -10,11 +10,15 @@ public class ComentarioSeletor {
 	private Integer idUsuario;
 	private Integer idTweet;
 
-    private Integer limite; //10
-    private Integer pagina; //3
+    private Integer limite; 
+    private Integer pagina;
     
     public boolean possuiFiltro() {
-		return this.id != null || (this.conteudo != null && !this.conteudo.trim().isEmpty() );
+    	return this.id != null || (this.conteudo != null && !this.conteudo.trim().isEmpty() ) || this.data != null  || this.idUsuario != null || this.idTweet != null;
+	}
+    
+    public boolean possuiPaginacao() {
+		return this.pagina > 0 && this.limite > 0;
 	}
 	
     public Integer getId() {

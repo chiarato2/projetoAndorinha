@@ -36,7 +36,7 @@ public class Comentario {
 	@JoinColumn(name = "id_usuario", referencedColumnName = "id")
 	private Usuario usuario;
 	
-	@ManyToOne//(mappedBy = "comentario", fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name = "id_tweet", referencedColumnName = "id")
 	private Tweet tweet;
 	

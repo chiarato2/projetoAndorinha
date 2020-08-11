@@ -122,7 +122,7 @@ public class TestComentarioRepository {
 		});
 	}
 	
-	//filtros
+	
 	@Test
 	public void testa_pesquisar_comentarios_filtrado_por_tweet() throws ErroAoConectarNaBaseException, ErroAoConsultarBaseException {
 
@@ -158,5 +158,5 @@ public class TestComentarioRepository {
 		assertThat(total).isNotNull();
 		assertThat(total).isEqualTo(10L);
 	}
-	//filtros
+
 }
