@@ -1,7 +1,6 @@
 package repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.Calendar;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.List;
 import javax.ejb.EJB;
 
 import org.dbunit.operation.DatabaseOperation;
-import org.hibernate.QueryException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -117,22 +115,23 @@ public class TestTweetRepository {
 	@Test
 	public void testa_pesquisar_tweets_por_id_usuario() throws ErroAoConectarNaBaseException, ErroAoConsultarBaseException{
 		TweetSeletor seletor = new TweetSeletor();
+		seletor.setIdUsuario(1);
 		
-		seletor.setIdUsuario(ID_USUARIO_CONSULTA);
 		List<Tweet> tweets = this.tweetRepository.pesquisar(seletor);
-		//assertThatThrownBy(() -> { this.tweetRepository.pesquisar(seletor); })
-		//.hasCauseInstanceOf(QueryException.class);
 		
-		assertThat(tweets).isNotNull()
+		assertThat( tweets ).isNotNull()
 							.isNotEmpty()
-							.hasSize(3)
+							.hasSize(1)
 							.extracting("conteudo")
-							.containsExactlyInAnyOrder("Minha postagem de teste",
-													   "Minha postagem de teste 2", 
-													   "Minha postagem de teste 3");
+							.containsExactlyInAnyOrder("Minha postagem de teste");
+		
+		tweets.stream().forEach(t -> {
+			assertThat(t.getData()).isNotNull().isLessThan(Calendar.getInstance());
+			assertThat(t.getUsuario()).isNotNull();
+		});
 		
 	}
-	
+
 	
 	@Test
 	public void testa_contar_tweets_por_conteudo() throws ErroAoConectarNaBaseException, ErroAoConsultarBaseException{

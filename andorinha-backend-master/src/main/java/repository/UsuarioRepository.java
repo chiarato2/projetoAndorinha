@@ -49,7 +49,7 @@ public class UsuarioRepository extends AbstractCrudRepository {
 	public Long contar(UsuarioSeletor seletor) {
 		
 		StringBuilder jpql = new StringBuilder();
-		jpql.append("SELECT COUNT(u) FROM Usuario u");
+		jpql.append("SELECT COUNT(u) FROM Usuario u ");
 		
 		this.criarFiltro(jpql, seletor);
 		
@@ -60,7 +60,7 @@ public class UsuarioRepository extends AbstractCrudRepository {
 		return (Long)query.getSingleResult();
 	}
 
-	public List<Usuario> listarTodos() throws ErroAoConectarNaBaseException, ErroAoConsultarBaseException {
+	public List<Usuario> listarTodos() {
 		
 		return this.pesquisar( new UsuarioSeletor() );
 	}
@@ -94,5 +94,4 @@ public class UsuarioRepository extends AbstractCrudRepository {
 			}                                         
 		}
 	}
-		
 }

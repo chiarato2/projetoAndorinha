@@ -4,7 +4,6 @@ import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,7 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "comentario")
+@Table(name="comentario")
 public class Comentario {
 	
 	@Id
@@ -79,5 +78,4 @@ public class Comentario {
 	public void setTweet(Tweet tweet) {
 		this.tweet = tweet;
 	}
-	
 }	

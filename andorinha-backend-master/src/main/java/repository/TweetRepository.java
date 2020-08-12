@@ -8,44 +8,42 @@ import javax.persistence.Query;
 
 import model.Tweet;
 
-import model.exceptions.ErroAoConectarNaBaseException;
-import model.exceptions.ErroAoConsultarBaseException;
 import model.seletor.TweetSeletor;
 
 
 @Stateless
 public class TweetRepository extends AbstractCrudRepository {
 
-	public void inserir(Tweet tweet) throws ErroAoConsultarBaseException, ErroAoConectarNaBaseException {
+	public void inserir(Tweet tweet) {
 		tweet.setData(Calendar.getInstance());
 		super.em.persist(tweet);
 	}
 
-	public void atualizar(Tweet tweet) throws ErroAoConsultarBaseException, ErroAoConectarNaBaseException {
+	public void atualizar(Tweet tweet) {
 		tweet.setData(Calendar.getInstance());
 		super.em.merge(tweet);
 	}
 
-	public void remover(int id) throws ErroAoConectarNaBaseException, ErroAoConsultarBaseException {
+	public void remover(int id) {
 		
 		Tweet tweet = this.consultar(id);
 		super.em.remove(tweet);
 	}
 
-	public Tweet consultar(int id) throws ErroAoConsultarBaseException, ErroAoConectarNaBaseException {
+	public Tweet consultar(int id) {
 		
 		return super.em.find(Tweet.class, id);
 	}
 
-	public List<Tweet> listarTodos() throws ErroAoConsultarBaseException, ErroAoConectarNaBaseException {
+	public List<Tweet> listarTodos() {
 		
 		return this.pesquisar( new TweetSeletor() );
 	}
 	
-	public List<Tweet> pesquisar(TweetSeletor seletor) throws ErroAoConsultarBaseException, ErroAoConectarNaBaseException{
+	public List<Tweet> pesquisar(TweetSeletor seletor) {
 		
 		StringBuilder jpql = new StringBuilder();
-		jpql.append("SELECT t FROM Tweet t ");
+		jpql.append("SELECT t FROM Tweet t JOIN t.usuario u ");
 		
 		this.criarFiltro(jpql, seletor);
 		
@@ -56,7 +54,7 @@ public class TweetRepository extends AbstractCrudRepository {
 		return query.getResultList();
 	}
 	
-	public Long contar(TweetSeletor seletor) throws ErroAoConsultarBaseException, ErroAoConectarNaBaseException{
+	public Long contar(TweetSeletor seletor) {
 		
 		StringBuilder jpql = new StringBuilder();
 		jpql.append("SELECT COUNT(t) FROM Tweet t ");
@@ -76,10 +74,21 @@ public class TweetRepository extends AbstractCrudRepository {
 			
 			jpql.append("WHERE ");
 			boolean primeiro = true;
-			if ( seletor.getIdUsuario() != null ) {
+			if ( seletor.getId() != null ) {
 				
 				jpql.append("t.id = :id ");
 				primeiro = false;
+			}
+			
+			if (seletor.getIdUsuario() != null) {
+				if (!primeiro) {
+					
+					jpql.append("AND ");
+				}else {
+					primeiro = false;
+				}
+				
+				jpql.append("t.usuario.id  = :id_usuario ");
 			}
 			
 			if(seletor.getConteudo() != null && !seletor.getConteudo().trim().isEmpty()) {
@@ -87,7 +96,7 @@ public class TweetRepository extends AbstractCrudRepository {
 					
 					jpql.append("AND ");
 				}else {
-					primeiro = true;
+					primeiro = false;
 				}
 				
 				jpql.append("t.conteudo LIKE :conteudo ");
@@ -98,23 +107,12 @@ public class TweetRepository extends AbstractCrudRepository {
 					
 					jpql.append("AND ");
 				}else {
-					primeiro = true;
+					primeiro = false;
 				}
 				
-				jpql.append("t.data_postagem = :data_postagem ");
+				jpql.append("date(t.data) = :data_postagem ");
 			}
-			
-			if (seletor.getIdUsuario() != null) {
-				if (!primeiro) {
-					
-					jpql.append("AND ");
-				}else {
-					primeiro = true;
-				}
-				
-				jpql.append("t.id_usuario = :id_usuario ");
-			}
-		}	
+		}
 	}
 
 	private void adicionarParametros(Query query, TweetSeletor seletor) {

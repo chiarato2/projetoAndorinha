@@ -41,7 +41,7 @@ public class ComentarioRepository extends AbstractCrudRepository {
 	public List<Comentario> pesquisar(ComentarioSeletor seletor) {
 		
 		StringBuilder jpql = new StringBuilder();
-		jpql.append("SELECT c FROM Comentario c ");
+		jpql.append("SELECT c FROM Comentario c JOIN c.usuario JOIN c.tweet t JOIN t.usuario ");
 		
 		this.criarFiltro(jpql, seletor);
 		
@@ -56,7 +56,7 @@ public class ComentarioRepository extends AbstractCrudRepository {
 	public Long contar(ComentarioSeletor seletor) {
 		
 		StringBuilder jpql = new StringBuilder();
-		jpql.append("SELECT COUNT(c) FROM Comentario c");
+		jpql.append("SELECT COUNT(c) FROM Comentario c ");
 		
 		this.criarFiltro(jpql, seletor);
 		
@@ -72,34 +72,10 @@ public class ComentarioRepository extends AbstractCrudRepository {
 		if(seletor.possuiFiltro()) {
 			jpql.append("WHERE ");
 			boolean primeiro = true;
-			if(seletor.getIdTweet() != null && seletor.getIdUsuario() != null) {
+			if(seletor.getId() != null) {
 				
-				jpql.append("c.id = :id");
+				jpql.append("c.id = :id ");
 				primeiro = false;
-			}
-			
-			if(seletor.getConteudo() != null && !seletor.getConteudo().trim().isEmpty()) {
-				if(!primeiro) {
-					jpql.append("AND ");
-	
-				}else {
-					
-					primeiro = true;
-				}
-				
-				jpql.append("c.conteudo LIKE :conteudo");
-			}
-			
-			if (seletor.getData() != null) {
-				if (!primeiro) {
-					
-					jpql.append("AND ");
-				}else {
-					
-					primeiro = true;
-				}
-				
-				jpql.append("c.data_postagem = :data_postagem ");
 			}
 			
 			if (seletor.getIdUsuario() != null) {
@@ -108,22 +84,48 @@ public class ComentarioRepository extends AbstractCrudRepository {
 					jpql.append("AND ");
 				}else {
 					
-					primeiro = true;
+					primeiro = false;
 				}
 				
-				jpql.append("c.id_usuario = :id_usuario ");
+				jpql.append("c.usuario.id = :id_usuario ");
 			}
 			
 			if (seletor.getIdTweet() != null) {
 				if (!primeiro) {
 					
 					jpql.append("AND ");
+				}else {
+					
+					primeiro = false;
 				}
 				
-				jpql.append("c.id_tweet = :id_tweet ");
+				jpql.append("c.tweet.id = :id_tweet ");
+			}
+			
+			if(seletor.getConteudo() != null && !seletor.getConteudo().trim().isEmpty()) {
+				if(!primeiro) {
+					jpql.append("AND ");
+	
+				}else {
+					
+					primeiro = false;
+				}
+				
+				jpql.append("c.conteudo LIKE :conteudo ");
+			}
+			
+			if (seletor.getData() != null) {
+				if (!primeiro) {
+					
+					jpql.append("AND ");
+				}else {
+					
+					primeiro = false;
+				}
+				
+				jpql.append("date(t.data) = :data_postagem ");
 			}
 		}
-		
 	}
 	
 	private void adicionarParametros(Query query, ComentarioSeletor seletor) {
