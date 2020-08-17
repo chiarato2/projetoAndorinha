@@ -2,7 +2,7 @@ package model.seletor;
 
 import java.util.Calendar;
 
-public class ComentarioSeletor {
+public class ComentarioSeletor extends AbstractBaseSeletor{
 
 	private Integer id;
 	private String conteudo;

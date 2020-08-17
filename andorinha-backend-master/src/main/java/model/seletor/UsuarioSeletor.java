@@ -1,12 +1,12 @@
 package model.seletor;
 
-public class UsuarioSeletor {
+public class UsuarioSeletor extends AbstractBaseSeletor{
 
 	private Integer id;
 	private String nome;
 
-	private int limite;
-	private int pagina;
+	private Integer limite;
+	private Integer pagina;
 
 	public boolean possuiFiltro() {
 		return this.id != null || (this.nome != null && !this.nome.trim().isEmpty() );
@@ -29,7 +29,7 @@ public class UsuarioSeletor {
 		this.nome = nome;
 	}
 
-	public int getLimite() {
+	public Integer getLimite() {
 		return limite;
 	}
 
@@ -37,7 +37,7 @@ public class UsuarioSeletor {
 		this.limite = limite;
 	}
 
-	public int getPagina() {
+	public Integer getPagina() {
 		return pagina;
 	}
 

@@ -2,7 +2,7 @@ package model.seletor;
 
 import java.util.Calendar;
 
-public class TweetSeletor {
+public class TweetSeletor extends AbstractBaseSeletor{
 
 	private Integer id;
 	private String conteudo;
