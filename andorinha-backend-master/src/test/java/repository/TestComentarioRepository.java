@@ -127,8 +127,8 @@ public class TestComentarioRepository {
 	public void testa_pesquisar_comentarios_filtrado_por_tweet() throws ErroAoConectarNaBaseException, ErroAoConsultarBaseException {
 
 		ComentarioSeletor seletor = new ComentarioSeletor();
-		seletor.setIdTweet( 2 );
-		seletor.setIdUsuario( 1 );
+		seletor.setIdTweet( 1 );
+		//seletor.setIdUsuario( 1 );
 
 		List<Comentario> comentarios = this.comentarioRepository.pesquisar( seletor );
 

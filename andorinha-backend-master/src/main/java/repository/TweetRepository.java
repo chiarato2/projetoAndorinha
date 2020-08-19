@@ -41,14 +41,12 @@ public class TweetRepository extends AbstractCrudRepository<Tweet> {
 	
 	public List<TweetDTO> pesquisarDTO(TweetSeletor seletor){
 		return super.createTupleQuery()
-				.select("id", "usuario.id as idUsuario", "usuario.nome as nomeUsuario", "data", "conteudo")
+				.select("id", "conteudo", "data", "usuario.id as idUsuario")
 				.join("usuario")
 				.equal("id", seletor.getId())
 				.equal("usuario.id", seletor.getIdUsuario())
 				.like("conteudo", seletor.getConteudo())
 				.equal("data", seletor.getData())
-				.setFirstResult(seletor.getOffset())
-				.setMaxResults(seletor.getLimite())
 				.list(TweetDTO.class);
 	}
 }
